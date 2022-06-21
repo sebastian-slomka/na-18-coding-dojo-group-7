@@ -1,12 +1,3 @@
-/***
- * Dummy testing framework
- *
- * Example usage:
- * 	TEST(some_test_name) {
- * 		EXPECT(true == true);
- * 	}
- */
-
 #include <cctype>
 #include <iostream>
 #include <sstream>
@@ -31,6 +22,16 @@ void addFailure(std::ostream& os, const char* file, unsigned line, const char* c
 #include <vector>
 #include <fstream>
 #include <cstdlib>
+#include <map>
+
+const std::string input =
+"Port 22\n"\
+"\n"\
+"LoginGraceTime 2m\n"\
+"#PermitRootLogin prohibit-password\n"\
+"#StrictModes yes\n"\
+"MaxAuthTries 6\n"\
+"MaxSessions 10\n";
 
 class Sshd_configWraper
 {
@@ -43,22 +44,53 @@ void dataFrom_shd_config()
 	std::ifstream sshd_config_data;
 	sshd_config_data.open("/home/acad/projects/CodingDojo2/na-18-coding-dojo-group-7/src/sshd_config");
 
-	if(!sshd_config_data.is_open())
-	{
-		std::cerr << "Fille cannot be loaded" << std::endl;
-	}
+	// if(!sshd_config_data.is_open())
+	// {
+	// 	std::cerr << "Fille cannot be loaded" << std::endl;
+	// }
 
 	std::string str;
 	std::vector<std::string> vecOfStrs;
-	while (std::getline(sshd_config_data, str))
+	std::stringstream s(input);
+	std::map<std::string, std::string> dojoMap;
+	while (std::getline(s, str))
 	{
 		vecOfStrs.push_back(str);
 	}
-	std::cout<<vecOfStrs.size()<<std::endl;
+	
+	
 	for(auto const& line : vecOfStrs)
 	{
-		std::cout<< line << std::endl;
+		
+		std::stringstream ssteam(line);
+		std::string tempWord;
+		std::vector <std::string> tempVec;
+		// std::cout << line << std::endl;
+		while(std::getline(ssteam,tempWord, ' '))
+		{
+			std::cout << tempWord << std::endl;
+		    tempVec.push_back(tempWord);
+		}
+
+		try 
+		{
+			dojoMap.insert({tempVec.at(0),tempVec.at(1)});
+		}
+		catch(const std::out_of_range& e)
+		{
+			std::cerr << "out of range" << std::endl;
+		}
+		
 	}
+	
+	for(auto[k,v]: dojoMap)
+	{
+		// std::cout<<k<<' '<<v<<std::endl;
+
+	}
+	
+	
+	
 
 	sshd_config_data.close();
 
