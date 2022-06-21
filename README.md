@@ -41,4 +41,13 @@ try {
 } catch(const std::bad_sshd_config_file_entry& bscfe) {
     std::cerr << "Modyfing ssh port filed"; << '\n';
 }
+
+// Comment out/Uncomment a specific entry
+if(sshdConfig.isCommented(SSHD_CONFIG::PORT)) {
+    sshd.Config.uncomment(SSHD_CONFIG::PORT);
+}
+
+if(!sshdConfig.isCommented(SSHD_CONFIG::PORT)) {
+    sshd.Config.comment(SSHD_CONFIG::PORT);
+}
 ```
