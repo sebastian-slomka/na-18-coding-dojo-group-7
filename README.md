@@ -6,15 +6,21 @@ SSH service on linux contains its global configuration in a file called `sshd_co
 
 *In order to alleviate breaking ssh service, copy the sshd_config file to some other location and work on that copy.*
 
-### Example input
+### Class initialisation
 
 ```c++
-
-// Object initalisation
 const std::path sshd_config_file_path(/etc/ssh/sshd_config)
-SSHDConfig sshdConfig(sshd_config_file_path);
 
-// Printing values from the parsed sshd_config file
+try {
+    SSHDConfig sshdConfig(sshd_config_file_path);
+} catch(const std::sshdconfig_failed_to_open& sfto) {
+    std::cerr << "Failed to load sshd_config file" << '\n''
+}
+```
+
+### Printing values from the parsed sshd_config file
+
+```c++
 std::cout << sshdConfig.getPort() << '\n'; // 22
 std::cout << sshdConfig << '\n';
 /*
@@ -24,9 +30,11 @@ ListenAddress 0.0.0.0
 ListenAddress ::
 ...
 */
+```
 
-// Modyfing values in the parsed sshd_config file (each passed value should be validaded depending what values certain entry can hold)
+### Modyfing values in the parsed sshd_config file (each passed value should be validaded depending what values certain entry can hold)
 
+```c++
 const unsigned short newPort = 13001;
 
 // Option 1: Error code
@@ -41,8 +49,11 @@ try {
 } catch(const std::bad_sshd_config_file_entry& bscfe) {
     std::cerr << "Modyfing ssh port filed"; << '\n';
 }
+```
 
-// Comment out/Uncomment a specific entry
+### Comment out/Uncomment a specific entry
+
+```c++
 if(sshdConfig.isCommented(SSHD_CONFIG::PORT)) {
     sshd.Config.uncomment(SSHD_CONFIG::PORT);
 }
