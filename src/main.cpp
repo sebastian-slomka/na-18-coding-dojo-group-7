@@ -30,6 +30,7 @@ void addFailure(std::ostream& os, const char* file, unsigned line, const char* c
 /*******************************************************************************************/
 #include <vector>
 #include <fstream>
+#include <cstdlib>
 
 class Sshd_configWraper
 {
@@ -47,6 +48,18 @@ void dataFrom_shd_config()
 		std::cerr << "Fille cannot be loaded" << std::endl;
 	}
 
+	std::string str;
+	std::vector<std::string> vecOfStrs;
+	while (std::getline(sshd_config_data, str))
+	{
+		vecOfStrs.push_back(str);
+	}
+	std::cout<<vecOfStrs.size()<<std::endl;
+	for(auto const& line : vecOfStrs)
+	{
+		std::cout<< line << std::endl;
+	}
+
 	sshd_config_data.close();
 
 
@@ -62,16 +75,16 @@ private:
 
 int main() {
 
-	TEST(ObjectCreated)
+	/*TEST(ObjectCreated)
 	{
 		EXPECT(false);
-	};
+	};*/
 
-	TEST(MethodThatIsOpeningAndLoadingAFile)
-	{
+	/*TEST(MethodThatIsOpeningAndLoadingAFile)
+	{*/
 		Sshd_configWraper ssdconfigwraper;
 		ssdconfigwraper.dataFrom_shd_config();
-		EXPECT(false);
-	};
+		//EXPECT(false);
+	//};
 
 }
