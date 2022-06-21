@@ -28,7 +28,50 @@ void addFailure(std::ostream& os, const char* file, unsigned line, const char* c
 #define ASSERT(cond) if (cond) {} else return addFailure(failures, __FILE__, __LINE__, #cond)
 
 /*******************************************************************************************/
+#include <vector>
+#include <fstream>
+
+class Sshd_configWraper
+{
+public:
+
+void dataFrom_shd_config()
+{
+	//std::ifstream sshd_config_data("sshd_config");
+
+	std::ifstream sshd_config_data;
+	sshd_config_data.open("/home/acad/projects/CodingDojo2/na-18-coding-dojo-group-7/src/sshd_config");
+
+	if(!sshd_config_data.is_open())
+	{
+		std::cerr << "Fille cannot be loaded" << std::endl;
+	}
+
+	sshd_config_data.close();
+
+
+
+}
+
+private:
+
+
+};
+
+
 
 int main() {
+
+	TEST(ObjectCreated)
+	{
+		EXPECT(false);
+	};
+
+	TEST(MethodThatIsOpeningAndLoadingAFile)
+	{
+		Sshd_configWraper ssdconfigwraper;
+		ssdconfigwraper.dataFrom_shd_config();
+		EXPECT(false);
+	};
 
 }
