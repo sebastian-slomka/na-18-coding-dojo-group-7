@@ -52,25 +52,20 @@ class SSHDConfig
 			std::array<std::string, 2> tmpArray; 
 
 			std::stringstream is(input); 
-			while(std::getline(is, temp, ' ')){
+			while(std::getline(is, temp)){
+				std::stringstream tmpStream(temp);
+				
+				if(temp != ""){
+					//std::cout << "temp: " << temp.substr(0, temp.find(' ')) << " temp: " << temp.substr(temp.find(' ') + 1) << std::endl;
+					tmpArray[0] = temp.substr(0, temp.find(' '));
+					tmpArray[1] = temp.substr(temp.find(' ') + 1);
+				
+				 
 
-				if(temp != "")
-					tmpArray[counter] = temp; 
+					//std::cout << tmpArray.at(0) << " " << tmpArray.at(1) << std::endl; 
+					map.insert({tmpArray.at(0),tmpArray.at(1)}); 
 
-				if (counter == 1)
-					{
-						std::cout << tmpArray.at(0) << " " << tmpArray.at(1); 
-						map.insert({tmpArray.at(0),tmpArray.at(1)}); 
-						counter = 0; 
-					}
-				else{
-					counter++; 
 				}
-				
-				
-
-
-				 // map.insert(std::pair<std::string, std::string>(is, temp)); 
 		
 			}
 
@@ -99,9 +94,9 @@ int main()
 	{
 		std::unique_ptr<SSHDConfig> ptr = std::make_unique<SSHDConfig>(input); 
 
-		std::map<std::string, std::string> map = {{"Port", "22"}, {"", ""}, {"LoginGraceTime", "2m"}, 
+		std::map<std::string, std::string> map = {{"Port", "22"}, {"LoginGraceTime", "2m"}, 
 													{"#PermitRootLogin", "prohibit-password"}, {"#StrictModes", "yes"}, {"MaxAuthTries", "6"},
-													{"MaxSessions", "10"}, {"ParsingTest:", "FAILURE"}
+													{"MaxSessions", "10"}
 													};
 
 		EXPECT(map == ptr->ParseInput());
