@@ -35,48 +35,27 @@ const std::string input =
 class SSHDConfig
 {
 	public:
-		SSHDConfig(const std::string& name) : local_variable(name)
+		SSHDConfig(const std::string& data) : inputData(data)
 		{
 
 		}
-		
 
-
-	
 	private:
-		std::string local_variable; 
-
-
+		std::string inputData; 
 
 }; 
-
-
-
-
 
 int main()
 {
 
+	TEST(ConstractSHHDConfigWithStringParameter)
+	{
+		const std::string testString = "";
 
+		std::unique_ptr<SSHDConfig> ptr = std::make_unique<SSHDConfig>(testString); 
 
+		EXPECT(ptr != nullptr); 
 
-
-
-TEST(stringTest)
-{
-
-std::unique_ptr<SSHDConfig> ptr = std::make_unique<SSHDConfig>(""); 
-
-// SSHDConfig sshdconfig; 
-
-	EXPECT(ptr != nullptr); 
-
-
-
-}; 
-
-
-
-
+	}; 
 
 }
