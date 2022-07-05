@@ -56,7 +56,7 @@ class SSHDConfig
 				std::stringstream tmpStream(temp);
 				
 				if(temp != ""){
-					//std::cout << "temp: " << temp.substr(0, temp.find(' ')) << " temp: " << temp.substr(temp.find(' ') + 1) << std::endl;
+					//std::cout << "temp: " << temp.substr(0, temp.find(' ')) << " temp: " << temp.substr(temp.find(' ') + 1) << std::endl;  
 					tmpArray[0] = temp.substr(0, temp.find(' '));
 					tmpArray[1] = temp.substr(temp.find(' ') + 1);
 				
