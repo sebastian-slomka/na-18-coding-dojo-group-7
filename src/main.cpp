@@ -7,6 +7,7 @@
 #include <utility>
 #include <memory> 
 #include <map>
+#include <iterator>
 
 struct TestCase { std::string name{}; std::ostringstream failures{}; };
 template <typename T> void operator | (TestCase& testCase, T&& testBody) {
@@ -47,8 +48,30 @@ class SSHDConfig
 			std::map<std::string, std::string> map;
 			std::string temp;
 
-			while(std::getline(input, temp, " ")){
+			int counter = 0; 
+			std::array<std::string, 2> tmpArray; 
+
+			std::stringstream is(input); 
+			while(std::getline(is, temp, ' ')){
+
+				if(temp != "")
+					tmpArray[counter] = temp; 
+
+				if (counter == 1)
+					{
+						std::cout << tmpArray.at(0) << " " << tmpArray.at(1); 
+						map.insert({tmpArray.at(0),tmpArray.at(1)}); 
+						counter = 0; 
+					}
+				else{
+					counter++; 
+				}
 				
+				
+
+
+				 // map.insert(std::pair<std::string, std::string>(is, temp)); 
+		
 			}
 
 			return map;
