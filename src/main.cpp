@@ -5,6 +5,7 @@
 #include <string>
 #include <array>
 #include <utility>
+#include <memory> 
 struct TestCase { std::string name{}; std::ostringstream failures{}; };
 template <typename T> void operator | (TestCase& testCase, T&& testBody) {
 	    testBody(); auto failures = testCase.failures.str();
@@ -30,3 +31,52 @@ const std::string input =
 "MaxAuthTries 6\n"\
 "MaxSessions 10\n";
 
+
+class SSHDConfig
+{
+	public:
+		SSHDConfig(const std::string& name) : local_variable(name)
+		{
+
+		}
+		
+
+
+	
+	private:
+		std::string local_variable; 
+
+
+
+}; 
+
+
+
+
+
+int main()
+{
+
+
+
+
+
+
+TEST(stringTest)
+{
+
+std::unique_ptr<SSHDConfig> ptr = std::make_unique<SSHDConfig>(""); 
+
+// SSHDConfig sshdconfig; 
+
+	EXPECT(ptr != nullptr); 
+
+
+
+}; 
+
+
+
+
+
+}
