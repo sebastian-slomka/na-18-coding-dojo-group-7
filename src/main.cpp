@@ -6,6 +6,8 @@
 #include <array>
 #include <utility>
 #include <memory> 
+#include <map>
+
 struct TestCase { std::string name{}; std::ostringstream failures{}; };
 template <typename T> void operator | (TestCase& testCase, T&& testBody) {
 	    testBody(); auto failures = testCase.failures.str();
@@ -40,6 +42,18 @@ class SSHDConfig
 
 		}
 
+		std::map<std::string, std::string> ParseInput()
+		{
+			std::map<std::string, std::string> map;
+			std::string temp;
+
+			while(std::getline(input, temp, " ")){
+				
+			}
+
+			return map;
+		}
+
 	private:
 		std::string inputData; 
 
@@ -57,5 +71,18 @@ int main()
 		EXPECT(ptr != nullptr); 
 
 	}; 
+
+	TEST(ParsingTest)
+	{
+		std::unique_ptr<SSHDConfig> ptr = std::make_unique<SSHDConfig>(input); 
+
+		std::map<std::string, std::string> map = {{"Port", "22"}, {"", ""}, {"LoginGraceTime", "2m"}, 
+													{"#PermitRootLogin", "prohibit-password"}, {"#StrictModes", "yes"}, {"MaxAuthTries", "6"},
+													{"MaxSessions", "10"}, {"ParsingTest:", "FAILURE"}
+													};
+
+		EXPECT(map == ptr->ParseInput());
+
+	};
 
 }
