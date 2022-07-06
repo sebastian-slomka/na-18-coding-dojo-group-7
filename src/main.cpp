@@ -94,6 +94,30 @@ public:
 		return sshdData.find("Port")->second; // *sshdData.find("Port").second
 	}
 
+	bool saveToFile()
+	{
+		std::ofstream sshdFile(path);
+		if (!sshdFile.is_open())
+		{
+			return false;
+		}
+
+		for(auto [key, value] : sshdData)
+		{
+			sshdFile << key << " " << value << std::endl;
+		}
+		
+		sshdFile.close();
+		return !sshdFile.is_open();
+	}
+
+	void setPort(std::string portNumber)
+	{
+		sshdData.find("Port")->second = portNumber;
+		saveToFile();
+
+	}
+
 private:
 	const std::string path;
 
@@ -114,15 +138,23 @@ int main()
 
 	TEST(parseMethod)
 	{
-		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("/home/wolek/nokia_accademy/14_four_days_codingdojo/second_day/na-18-coding-dojo-group-7/data/sshd_config");
+		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("/home/acad/dev/dojo/na-18-coding-dojo-group-7/data/sshd_config");
 		bool result = sshdConfig->parse();
 		EXPECT(result == true);
 	};
 
 	TEST(shouldReturnPortNumber)
 	{
-		SSHDConfig sshdConfig("/home/wolek/nokia_accademy/14_four_days_codingdojo/second_day/na-18-coding-dojo-group-7/data/sshd_config");
+		SSHDConfig sshdConfig("/home/acad/dev/dojo/na-18-coding-dojo-group-7/data/sshd_config");
 		sshdConfig.parse();
 		EXPECT(sshdConfig.getPort() == "22");
+	};
+
+	TEST(setPortMethodShouldChangePortNumberInFile)
+	{
+		SSHDConfig sshdConfig("/home/acad/dev/dojo/na-18-coding-dojo-group-7/data/sshd_config");
+		sshdConfig.parse();
+		sshdConfig.setPort("32");
+		EXPECT(sshdConfig.getPort() == "32");
 	};
 }
