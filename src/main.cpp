@@ -61,26 +61,28 @@ public:
 	SSHDConfig(const std::string&);
 
 	bool parse(){
-		std::fstream sshdFile;
-		sshdFile.open(path, std::ios::in);
+		std::ifstream sshdFile(path);
+		if(!sshdFile.is_open()){
+			return false;
+		}
+
 		std::string line;
 		std::string key;
 		std::string value;
 		size_t space;
-		if(sshdFile.is_open()){
-			while(!sshdFile.eof()){
-				getline(sshdFile, line);
-				space = line.find(" ");
-				key = line.substr(0, space-1);
-				value = line.substr(space+1, line.length());
-				sshdData.insert(std::make_pair(key, value));
-			}
-			sshdFile.close();
-			return !sshdFile.is_open();
-		 } else {
-			return false;
-		 }
-
+		while(getline(sshdFile, line)){
+			space = line.find(" ");
+			key = line.substr(0, space-1);
+			value = line.substr(space+1, line.length());
+			sshdData.insert(std::make_pair(key, value));
+			//sshdData.insert({key,value});
+		}
+		sshdFile.close();
+		
+		for(auto[key,value]: sshdData){
+			std::cout<<key<<" "<<value<<std::endl;
+		}
+		return !sshdFile.is_open();
 	};
 private:
 	const std::string path;
@@ -94,7 +96,6 @@ SSHDConfig::SSHDConfig(const std::string& cpath):path(cpath)
 
 int main()
 {
-
 	TEST(classCreation)
 	{
 		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("");
@@ -103,7 +104,7 @@ int main()
 
 	TEST(parseMethod)
 	{
-		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("../data/sshd_config");
+		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("/home/acad/Documents/workshops/Dogo/na-18-coding-dojo-group-7/data/sshd_config");
 		EXPECT(sshdConfig->parse());
 	};
 
