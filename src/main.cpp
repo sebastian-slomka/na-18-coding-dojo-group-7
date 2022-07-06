@@ -58,11 +58,13 @@ void addFailure(std::ostream &os, const char *file, unsigned line, const char *c
 class SSHDConfig
 {
 public:
-	SSHDConfig(const std::string&);
+	SSHDConfig(const std::string &);
 
-	bool parse(){
+	bool parse()
+	{
 		std::ifstream sshdFile(path);
-		if(!sshdFile.is_open()){
+		if (!sshdFile.is_open())
+		{
 			return false;
 		}
 
@@ -70,27 +72,35 @@ public:
 		std::string key;
 		std::string value;
 		size_t space;
-		while(getline(sshdFile, line)){
+		while (getline(sshdFile, line))
+		{
 			space = line.find(" ");
-			key = line.substr(0, space-1);
-			value = line.substr(space+1, line.length());
+			key = line.substr(0, space);
+			value = line.substr(space + 1, line.length());
 			sshdData.insert(std::make_pair(key, value));
-			//sshdData.insert({key,value});
+			// sshdData.insert({key,value});
 		}
 		sshdFile.close();
-		
-		for(auto[key,value]: sshdData){
-			std::cout<<key<<" "<<value<<std::endl;
+
+		for (auto [key, value] : sshdData)
+		{
+			std::cout << key << " " << value << std::endl;
 		}
 		return !sshdFile.is_open();
 	};
+
+	std::string getPort()
+	{
+		return sshdData.find("Port")->second; // *sshdData.find("Port").second
+	}
+
 private:
 	const std::string path;
 
 	std::map<std::string, std::string> sshdData;
 };
 
-SSHDConfig::SSHDConfig(const std::string& cpath):path(cpath)
+SSHDConfig::SSHDConfig(const std::string &cpath) : path(cpath)
 {
 }
 
@@ -98,14 +108,21 @@ int main()
 {
 	TEST(classCreation)
 	{
-		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("");
+		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("/home/wolek/nokia_accademy/14_four_days_codingdojo/second_day/na-18-coding-dojo-group-7/data/sshd_config");
 		EXPECT(sshdConfig != nullptr);
 	};
 
 	TEST(parseMethod)
 	{
-		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("/home/acad/Documents/workshops/Dogo/na-18-coding-dojo-group-7/data/sshd_config");
-		EXPECT(sshdConfig->parse());
+		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("/home/wolek/nokia_accademy/14_four_days_codingdojo/second_day/na-18-coding-dojo-group-7/data/sshd_config");
+		bool result = sshdConfig->parse();
+		EXPECT(result == true);
 	};
 
+	TEST(shouldReturnPortNumber)
+	{
+		SSHDConfig sshdConfig("/home/wolek/nokia_accademy/14_four_days_codingdojo/second_day/na-18-coding-dojo-group-7/data/sshd_config");
+		sshdConfig.parse();
+		EXPECT(sshdConfig.getPort() == "22");
+	};
 }
