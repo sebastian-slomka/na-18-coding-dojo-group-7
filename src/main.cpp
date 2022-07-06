@@ -14,21 +14,64 @@
 #include <string>
 #include <array>
 #include <utility>
-struct TestCase { std::string name{}; std::ostringstream failures{}; };
-template <typename T> void operator | (TestCase& testCase, T&& testBody) {
-	    testBody(); auto failures = testCase.failures.str();
-	        if (failures.empty()) std::cout << testCase.name << ": SUCCESS\n";
-		    else std::cerr << testCase.name << ": FAILURE\n" << failures;
+struct TestCase
+{
+	std::string name{};
+	std::ostringstream failures{};
+};
+template <typename T>
+void operator|(TestCase &testCase, T &&testBody)
+{
+	testBody();
+	auto failures = testCase.failures.str();
+	if (failures.empty())
+		std::cout << testCase.name << ": SUCCESS\n";
+	else
+		std::cerr << testCase.name << ": FAILURE\n"
+				  << failures;
 }
-void addFailure(std::ostream& os, const char* file, unsigned line, const char* condition) {
-	    os << file << ":" << line << ": Failed: " << condition << "\n";
+void addFailure(std::ostream &os, const char *file, unsigned line, const char *condition)
+{
+	os << file << ":" << line << ": Failed: " << condition << "\n";
 }
-#define TEST(name) TestCase name{#name}; name | [&, &failures = name.failures]
-#define EXPECT(cond) if (cond) {} else addFailure(failures, __FILE__, __LINE__, #cond)
-#define ASSERT(cond) if (cond) {} else return addFailure(failures, __FILE__, __LINE__, #cond)
+#define TEST(name)        \
+	TestCase name{#name}; \
+	name | [&, &failures = name.failures ]
+#define EXPECT(cond) \
+	if (cond)        \
+	{                \
+	}                \
+	else             \
+		addFailure(failures, __FILE__, __LINE__, #cond)
+#define ASSERT(cond) \
+	if (cond)        \
+	{                \
+	}                \
+	else             \
+		return addFailure(failures, __FILE__, __LINE__, #cond)
 
 /*******************************************************************************************/
+#include <memory>
 
-int main() {
+class SSHDConfig
+{
+private:
+	/* data */
+public:
+	SSHDConfig(/* args */);
+};
 
+SSHDConfig::SSHDConfig(/* args */)
+{
+}
+
+int main()
+{
+
+	TEST(classCreation)
+	{
+
+		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("");
+		EXPECT(sshdConfig != nullptr);
+	}
 }
