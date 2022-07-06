@@ -52,16 +52,43 @@ void addFailure(std::ostream &os, const char *file, unsigned line, const char *c
 
 /*******************************************************************************************/
 #include <memory>
+#include <fstream>
+#include <map>
 
 class SSHDConfig
 {
-private:
-	/* data */
 public:
-	SSHDConfig(/* args */);
+	SSHDConfig(const std::string&);
+
+	bool parse(){
+		std::fstream sshdFile;
+		sshdFile.open(path, std::ios::in);
+		std::string line;
+		std::string key;
+		std::string value;
+		size_t space;
+		if(sshdFile.is_open()){
+			while(!sshdFile.eof()){
+				getline(sshdFile, line);
+				space = line.find(" ");
+				key = line.substr(0, space-1);
+				value = line.substr(space+1, line.length());
+				sshdData.insert(std::make_pair(key, value));
+			}
+			sshdFile.close();
+			return !sshdFile.is_open();
+		 } else {
+			return false;
+		 }
+
+	};
+private:
+	const std::string path;
+
+	std::map<std::string, std::string> sshdData;
 };
 
-SSHDConfig::SSHDConfig(/* args */)
+SSHDConfig::SSHDConfig(const std::string& cpath):path(cpath)
 {
 }
 
@@ -70,8 +97,14 @@ int main()
 
 	TEST(classCreation)
 	{
-
 		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("");
 		EXPECT(sshdConfig != nullptr);
-	}
+	};
+
+	TEST(parseMethod)
+	{
+		std::unique_ptr<SSHDConfig> sshdConfig = std::make_unique<SSHDConfig>("../data/sshd_config");
+		EXPECT(sshdConfig->parse());
+	};
+
 }
