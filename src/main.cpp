@@ -29,6 +29,46 @@ void addFailure(std::ostream& os, const char* file, unsigned line, const char* c
 
 /*******************************************************************************************/
 
+#include <memory>
+
+class CustomException : public std::exception {
+    public:
+        const char* what() {
+            return "There was a problem during creation a class";
+        }
+};
+
+class SSHDConfig
+{
+public:
+//constructors
+SSHDConfig(std::string path)
+{
+	// if (path != "")
+	// {
+
+	// }
+
+}
+
+//methods
+//getters
+
+//setters
+
+
+private:
+std::string m_path;
+
+};
+
 int main() {
+
+TEST(When_CreatedNewClass_Expect_PathIsEmpty) {
+	
+	std::unique_ptr<SSHDConfig> sshdconfigTested = std::make_unique<SSHDConfig>("");
+
+	EXPECT(sshdconfigTested != nullptr);
+};
 
 }
