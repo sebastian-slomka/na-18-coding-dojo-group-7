@@ -30,6 +30,8 @@ void addFailure(std::ostream& os, const char* file, unsigned line, const char* c
 /*******************************************************************************************/
 
 #include <memory>
+#include <fstream>
+#include <map>
 
 class CustomException : public std::exception {
     public:
@@ -42,12 +44,33 @@ class SSHDConfig
 {
 public:
 //constructors
-SSHDConfig(std::string path)
+SSHDConfig(const std::string &path)
 {
-	// if (path != "")
-	// {
+	std::ifstream inputfile(path);
 
-	// }
+	if(!inputfile.is_open())
+	{
+		throw CustomException();
+	}
+
+	std::string word1;
+	std::string word2;
+
+	/*while(getline(inputfile,line)){
+
+		 std::string s1;
+		 std::string s2;
+
+	}*/
+	int it=0;
+	while(inputfile >> word1 >> word2){
+			ssh_map.insert({word1,word2});
+	}
+
+	for(auto &element: ssh_map)
+	{
+		std::cout << element.first << " " << element.second << std::endl;
+	}
 
 }
 
@@ -59,14 +82,15 @@ SSHDConfig(std::string path)
 
 private:
 std::string m_path;
+std::map<std::string,std::string> ssh_map;
 
 };
 
 int main() {
 
-TEST(When_CreatedNewClass_Expect_PathIsEmpty) {
+TEST(When_CreatedNewClass_Expect_Object_Exists) {
 	
-	std::unique_ptr<SSHDConfig> sshdconfigTested = std::make_unique<SSHDConfig>("");
+	std::unique_ptr<SSHDConfig> sshdconfigTested = std::make_unique<SSHDConfig>("/home/ziomek/na-18-coding-dojo-group-7/src/sshd_config");
 
 	EXPECT(sshdconfigTested != nullptr);
 };
