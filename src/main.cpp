@@ -33,6 +33,7 @@ void addFailure(std::ostream& os, const char* file, unsigned line, const char* c
 #include <memory>
 #include <fstream>
 #include <map>
+#include <string>
 
 class CustomException : public std::exception {
     public:
@@ -87,10 +88,14 @@ std::string get_port(){
 	
 	return (ssh_map.at("Port"));
 }
-//setters
+
+
 
 
 void set_port(std::string s){
+
+	if ((isNumber(s) &&  isProperLenght(s) && isProperRange(s)))
+	
 	
 	ssh_map.at("Port") = s;
 	rewrite_file();
@@ -110,6 +115,35 @@ void rewrite_file(){
 		write_handler<<ssh_map.at(i);
 		write_handler<<"\n";
 	}
+
+	
+//setters
+}
+
+bool isNumber(std::string s)
+	{
+		for (const char &c : s)
+	{
+		if (std::isdigit(c) == 0) return false;
+	}
+	return true;
+	}
+
+bool isProperLenght(std::string s)
+{
+	if (s.size()>=1 && s.size()<=5)
+	{
+		return true;
+	}
+	return false;
+}
+bool isProperRange(std::string s)
+{
+	if (stoi(s)>=1 && stoi(s)<=65535)
+	{
+		return true;
+	}
+	return false;
 }
 
 };
