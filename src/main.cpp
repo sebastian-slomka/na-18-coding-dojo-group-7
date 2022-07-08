@@ -30,27 +30,57 @@ void addFailure(std::ostream& os, const char* file, unsigned line, const char* c
 
 /*******************************************************************************************/
 #include <memory>
+#include <fstream>
+
+class CustomExecpetion: public std::exception
+{
+	public:
+	const char * what ()
+	{
+		return "there was a problem during creation of objec of class SSHDConfig";
+	}
+};
 
 class SSHDConfig
 {
-private:
-
 public:
 
-SSHDConfig (std::string path) 
+SSHDConfig (std::string const& path) 
 {
-
+	std::fstream my_file;
+	my_file.open(path, std::ios::in);
+	//if (my_file.is_open()==false)
+	//{	
+		//throw CustomExecpetion();
+	//}
 }
+private:
 };
 
 
 int main() {
 
-	TEST(sReturnTrueIfObjectExists) 
+	/*TEST(ReturIfFileIsOpen)
+	//{
+		try
+		{
+			auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
+			//EXPECT(true);
+		}
+		catch(CustomExecpetion e)
+		{
+			std::cerr << e.what() << '\n';
+			//EXPECT(false);
+		}
+	//};*/
+
+
+	TEST(ReturnTrueIfObjectExists) 
 	{
-		auto pointer = std:: make_unique <SSHDConfig> ("sshd_config_file_path");
-		SSHDConfig object_1("sshd_config_file_path");
+		auto pointer = std::make_unique <SSHDConfig> ("");
  		EXPECT(pointer != nullptr);
  	};
+
+	
 
 }
