@@ -32,6 +32,8 @@ void addFailure(std::ostream& os, const char* file, unsigned line, const char* c
 #include <memory>
 #include <fstream>
 #include <map>
+#include <cstdlib>
+#include <algorithm>
 
 class CustomExecpetion: public std::exception
 {
@@ -42,6 +44,8 @@ class CustomExecpetion: public std::exception
 	}
 };
 
+
+
 class SSHDConfig
 {
 public:
@@ -50,14 +54,19 @@ SSHDConfig (std::string const& path)
 {
 	std::fstream my_file;
 	my_file.open(path, std::ios::in);
-	std::string key, value;
+	std::string line, value;
 
-	while(my_file >> key >> value){
-		data.insert({key, value});
+	while(std::getline(my_file, line)){
+		// int position = line.find(" ");
+		// std::cout << line.substr(0, position) << std::endl;
+		int count = std::count_if(line.begin(), line.end(), [](char space){return space==' ';});
+		std::cout << count << std::endl;
+
+		//data.insert({key, value});
 	}
-	for(auto[key, value] : data){
-		std::cout << key << " " << value << std::endl;
-	}
+	// for(auto[key, value] : data){
+	// 	std::cout << key << " " << value << std::endl;
+	// }
 	//if (my_file.is_open()==false)
 	//{	
 		//throw CustomExecpetion();
@@ -72,7 +81,7 @@ int main() {
 
 	TEST(ReturIfFileIsOpen) 
 	{
-		auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
+		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
 
  		EXPECT(pointer != nullptr);
  	};
