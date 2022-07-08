@@ -31,6 +31,7 @@ void addFailure(std::ostream& os, const char* file, unsigned line, const char* c
 /*******************************************************************************************/
 #include <memory>
 #include <fstream>
+#include <map>
 
 class CustomExecpetion: public std::exception
 {
@@ -49,16 +50,32 @@ SSHDConfig (std::string const& path)
 {
 	std::fstream my_file;
 	my_file.open(path, std::ios::in);
+	std::string key, value;
+
+	while(my_file >> key >> value){
+		data.insert({key, value});
+	}
+	for(auto[key, value] : data){
+		std::cout << key << " " << value << std::endl;
+	}
 	//if (my_file.is_open()==false)
 	//{	
 		//throw CustomExecpetion();
 	//}
 }
 private:
+	std::map<std::string, std::string> data;
 };
 
 
 int main() {
+
+	TEST(ReturIfFileIsOpen) 
+	{
+		auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
+
+ 		EXPECT(pointer != nullptr);
+ 	};
 
 	/*TEST(ReturIfFileIsOpen)
 	//{
