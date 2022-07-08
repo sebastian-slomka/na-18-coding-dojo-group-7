@@ -14,6 +14,7 @@
 #include <string>
 #include <array>
 #include <utility>
+
 struct TestCase { std::string name{}; std::ostringstream failures{}; };
 template <typename T> void operator | (TestCase& testCase, T&& testBody) {
 	    testBody(); auto failures = testCase.failures.str();
@@ -28,7 +29,28 @@ void addFailure(std::ostream& os, const char* file, unsigned line, const char* c
 #define ASSERT(cond) if (cond) {} else return addFailure(failures, __FILE__, __LINE__, #cond)
 
 /*******************************************************************************************/
+#include <memory>
+
+class SSHDConfig
+{
+private:
+
+public:
+
+SSHDConfig (std::string path) 
+{
+
+}
+};
+
 
 int main() {
+
+	TEST(sReturnTrueIfObjectExists) 
+	{
+		auto pointer = std:: make_unique <SSHDConfig> ("sshd_config_file_path");
+		SSHDConfig object_1("sshd_config_file_path");
+ 		EXPECT(pointer != nullptr);
+ 	};
 
 }
