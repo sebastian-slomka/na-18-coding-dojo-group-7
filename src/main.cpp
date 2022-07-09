@@ -54,17 +54,32 @@ SSHDConfig (std::string const& path)
 {
 	std::fstream my_file;
 	my_file.open(path, std::ios::in);
-	std::string line, value;
+	std::string line, key, value;
 
 	while(std::getline(my_file, line)){
-		// int position = line.find(" ");
-		// std::cout << line.substr(0, position) << std::endl;
-		auto it = std::unique(line.begin(), line.end(), [](char const &lhs, char const &rhs) {return (lhs == rhs) && (lhs == ' ');});
+
+		auto it = std::unique(line.begin(), line.end(), [](char const &lhs, char const &rhs) {
+			return (lhs == rhs) && (lhs == ' ');
+		});
 		line.erase(it, line.end());
-		int count = std::count_if(line.begin(), line.end(), [](char space){return space==' ';});
-		std::cout << count << std::endl;
-													//CZY WCZYTYWANIE (DATA.INSERT) Z GETLINE 
-		//data.insert({key, value});
+
+		auto last_char = line.back();
+		if(last_char == ' ')
+			line.pop_back();
+
+		int count = std::count_if(line.begin(), line.end(), [](char space){
+			return space==' ';
+		});
+		
+		if(count > 1)
+			throw CustomExecpetion();
+	
+		data.insert({key, value});
+		
+		for(auto[key, value] : data){
+		 	std::cout << key << " " << value << std::endl;
+		}
+
 	}
 	// for(auto[key, value] : data){
 	// 	std::cout << key << " " << value << std::endl;
@@ -83,25 +98,17 @@ int main() {
 
 	TEST(ReturIfFileIsOpen) 
 	{
-		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
-
- 		EXPECT(pointer != nullptr);
- 	};
-
-	/*TEST(ReturIfFileIsOpen)
-	//{
-		try
-		{
-			auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
-			//EXPECT(true);
-		}
-		catch(CustomExecpetion e)
+		//home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config
+		//home/acad/na-18-coding-dojo-group-7/data/sshd_config
+		try{
+			auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
+			EXPECT(pointer != nullptr);
+		}catch(CustomExecpetion e)
 		{
 			std::cerr << e.what() << '\n';
-			//EXPECT(false);
-		}
-	//};*/
-
+			EXPECT(false);
+		};
+ 	};
 
 	TEST(ReturnTrueIfObjectExists) 
 	{
