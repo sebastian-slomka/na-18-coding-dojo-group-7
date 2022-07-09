@@ -59,9 +59,11 @@ SSHDConfig (std::string const& path)
 	while(std::getline(my_file, line)){
 		// int position = line.find(" ");
 		// std::cout << line.substr(0, position) << std::endl;
+		auto it = std::unique(line.begin(), line.end(), [](char const &lhs, char const &rhs) {return (lhs == rhs) && (lhs == ' ');});
+		line.erase(it, line.end());
 		int count = std::count_if(line.begin(), line.end(), [](char space){return space==' ';});
 		std::cout << count << std::endl;
-
+													//CZY WCZYTYWANIE (DATA.INSERT) Z GETLINE 
 		//data.insert({key, value});
 	}
 	// for(auto[key, value] : data){
