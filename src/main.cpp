@@ -74,8 +74,6 @@ SSHDConfig (std::string const& path)
 		
 		if(count > 1)
 			throw CustomExecpetion();
-	
-		//data.insert({key, value});
 		
 		}
 		my_file.close();
@@ -87,17 +85,6 @@ SSHDConfig (std::string const& path)
 		data.insert({key, value});
 		std:: cout << key << " " << value << std::endl;
 	}
-	// for(auto[key, value] : data){
-	// 	std::cout << key << " " << value << std::endl;
-	// }
-
-	// for(auto[key, value] : data){
-	// 	std::cout << key << " " << value << std::endl;
-	// }
-	//if (my_file.is_open()==false)
-	//{	
-		//throw CustomExecpetion();
-	//}
 }
 private:
 	std::map<std::string, std::string> data;
