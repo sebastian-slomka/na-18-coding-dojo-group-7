@@ -57,6 +57,7 @@ SSHDConfig (std::string const& path)
 	std::string line, key, value;
 
 	while(std::getline(my_file, line)){
+		
 
 		auto it = std::unique(line.begin(), line.end(), [](char const &lhs, char const &rhs) {
 			return (lhs == rhs) && (lhs == ' ');
@@ -74,13 +75,22 @@ SSHDConfig (std::string const& path)
 		if(count > 1)
 			throw CustomExecpetion();
 	
-		data.insert({key, value});
+		//data.insert({key, value});
 		
-		for(auto[key, value] : data){
-		 	std::cout << key << " " << value << std::endl;
 		}
+		my_file.close();
+		my_file.open(path, std::ios::in);
 
+
+
+	while(my_file >> key >> value){
+		data.insert({key, value});
+		std:: cout << key << " " << value << std::endl;
 	}
+	// for(auto[key, value] : data){
+	// 	std::cout << key << " " << value << std::endl;
+	// }
+
 	// for(auto[key, value] : data){
 	// 	std::cout << key << " " << value << std::endl;
 	// }
@@ -98,10 +108,11 @@ int main() {
 
 	TEST(ReturIfFileIsOpen) 
 	{
+		//home/acad/na-18-coding-dojo-group-7/data/sshd_config
 		//home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config
 		//home/acad/na-18-coding-dojo-group-7/data/sshd_config
 		try{
-			auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
+			auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
 			EXPECT(pointer != nullptr);
 		}catch(CustomExecpetion e)
 		{
