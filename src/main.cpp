@@ -54,32 +54,12 @@ SSHDConfig (std::string const& path)
 {
 	std::fstream my_file;
 	my_file.open(path, std::ios::in);
-	std::string line, key, value;
+	std::string key, value;
 
-	while(std::getline(my_file, line)){
-		
+	configFileValidator(my_file);
 
-		auto it = std::unique(line.begin(), line.end(), [](char const &lhs, char const &rhs) {
-			return (lhs == rhs) && (lhs == ' ');
-		});
-		line.erase(it, line.end());
-
-		auto last_char = line.back();
-		if(last_char == ' ')
-			line.pop_back();
-
-		int count = std::count_if(line.begin(), line.end(), [](char space){
-			return space==' ';
-		});
-		
-		if(count > 1)
-			throw CustomExecpetion();
-		
-		}
-		my_file.close();
-		my_file.open(path, std::ios::in);
-
-
+	my_file.close();
+	my_file.open(path, std::ios::in);
 
 	while(my_file >> key >> value){
 		data.insert({key, value});
@@ -122,6 +102,29 @@ std::string getValue (std::string key)
 
 private:
 	std::map<std::string, std::string> data;
+
+	void configFileValidator(std::fstream &my_file){
+		std::string line;
+		while(std::getline(my_file, line)){
+
+		auto it = std::unique(line.begin(), line.end(), [](char const &lhs, char const &rhs) {
+			return (lhs == rhs) && (lhs == ' ');
+		});
+		line.erase(it, line.end());
+
+		auto last_char = line.back();
+		if(last_char == ' ')
+			line.pop_back();
+
+		int count = std::count_if(line.begin(), line.end(), [](char space){
+			return space==' ';
+		});
+		
+		if(count > 1)
+			throw CustomExecpetion();
+		
+	}
+	}
 };
 
 
@@ -129,22 +132,22 @@ int main() {
 
 	TEST (ReturnTrueIfNewConfigFileCreated)
 	{
-		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
-		pointer->saveFile("/home/acad/na-18-coding-dojo-group-7/data/sshd_config(copy)");
-		auto pointer2 = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config(copy)");
+		auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
+		pointer->saveFile("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config(copy)");
+		auto pointer2 = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config(copy)");
 		EXPECT(pointer2->getValue("Port")=="22");
 	};
 
 	TEST (ReturnTrueIfNewElementIsInserted)
 	{
-		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
+		auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
 		pointer->addLine("tego", "typu");
 		EXPECT(pointer->getValue("tego")=="typu");
 	};
 
 	TEST (ReturnTrueIfSetPortWorks)
 	{
-		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
+		auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
 		pointer->setPort("Port", "25");
 		EXPECT(pointer->getValue("Port")=="25");
 	};
@@ -155,7 +158,7 @@ int main() {
 		//home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config
 		//home/acad/na-18-coding-dojo-group-7/data/sshd_config
 		try{
-			auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
+			auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
 			EXPECT(pointer != nullptr);
 		}catch(CustomExecpetion e)
 		{
