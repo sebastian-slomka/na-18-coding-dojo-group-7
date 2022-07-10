@@ -99,6 +99,17 @@ std::string getValue (std::string key)
 	return data[key];
 }
 
+void uncommentTheLine(std::fstream &my_file){
+		std::string line;
+		while(std::getline(my_file, line)){
+
+			auto it = line.begin();
+
+			if(*it == '#')
+				line.erase(it);
+		}
+	}
+
 
 private:
 	std::map<std::string, std::string> data;
@@ -125,10 +136,20 @@ private:
 		
 	}
 	}
+
+	
 };
 
 
 int main() {
+
+	/*TEST (ReturnTrueIfHashtagRemoved)
+	{
+		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/data/sshd_config");
+		pointer->uncommentTheLine("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/data/sshd_config");
+		EXPECT(pointer->getValue("tego")=="typu");
+	};
+	*/
 
 	TEST (ReturnTrueIfNewConfigFileCreated)
 	{
