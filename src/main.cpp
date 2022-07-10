@@ -83,15 +83,71 @@ SSHDConfig (std::string const& path)
 
 	while(my_file >> key >> value){
 		data.insert({key, value});
-		std:: cout << key << " " << value << std::endl;
+		//std:: cout << key << " " << value << std::endl;
 	}
+
+
 }
+
+void setPort (std::string key, std::string value)
+{	
+	data[key] = value;
+	//std:: cout << key << " " << value << std::endl;
+}
+
+void addLine (std::string key, std::string value)
+{
+	data.insert ({key, value});
+}
+
+void saveFile (std::string const& path)
+{
+	std::string key, value;
+	std::fstream my_copy;
+	my_copy.open(path, std::ios::out);
+
+	for (auto[key, value]: data)
+	{
+		my_copy<< key << " " << value << std::endl;
+	}
+	my_copy.close();
+
+}
+
+std::string getValue (std::string key)
+{
+	return data[key];
+}
+
+
 private:
 	std::map<std::string, std::string> data;
 };
 
 
 int main() {
+
+	TEST (ReturnTrueIfNewConfigFileCreated)
+	{
+		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
+		pointer->saveFile("/home/acad/na-18-coding-dojo-group-7/data/sshd_config(copy)");
+		auto pointer2 = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config(copy)");
+		EXPECT(pointer2->getValue("Port")=="22");
+	};
+
+	TEST (ReturnTrueIfNewElementIsInserted)
+	{
+		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
+		pointer->addLine("tego", "typu");
+		EXPECT(pointer->getValue("tego")=="typu");
+	};
+
+	TEST (ReturnTrueIfSetPortWorks)
+	{
+		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/na-18-coding-dojo-group-7/data/sshd_config");
+		pointer->setPort("Port", "25");
+		EXPECT(pointer->getValue("Port")=="25");
+	};
 
 	TEST(ReturIfFileIsOpen) 
 	{
