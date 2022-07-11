@@ -1,12 +1,3 @@
-/***
- * Dummy testing framework
- *
- * Example usage:
- * 	TEST(some_test_name) {
- * 		EXPECT(true == true);
- * 	}
- */
-
 #include <cctype>
 #include <iostream>
 #include <sstream>
@@ -44,8 +35,6 @@ class CustomExecpetion: public std::exception
 	}
 };
 
-
-
 class SSHDConfig
 {
 public:
@@ -63,16 +52,13 @@ SSHDConfig (std::string const& path)
 
 	while(my_file >> key >> value){
 		data.insert({key, value});
-		//std:: cout << key << " " << value << std::endl;
 	}
-
 
 }
 
 void setPort (std::string key, std::string value)
 {	
 	data[key] = value;
-	//std:: cout << key << " " << value << std::endl;
 }
 
 void addLine (std::string key, std::string value)
@@ -91,7 +77,6 @@ void saveFile (std::string const& path)
 		my_copy<< key << " " << value << std::endl;
 	}
 	my_copy.close();
-
 }
 
 std::string getValue (std::string key)
@@ -99,17 +84,29 @@ std::string getValue (std::string key)
 	return data[key];
 }
 
-void uncommentTheLine(std::fstream &my_file){
-		std::string line;
-		while(std::getline(my_file, line)){
+void uncommentTheLine(std::string const& path){
 
+	std::string key, value, line;
+	std::fstream bufor, copy;
+	bufor.open("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/data/sshd_config", std::ios::in);
+    copy.open(path, std::ios::out);
+	
+		while(std::getline(bufor, line)){
 			auto it = line.begin();
 
 			if(*it == '#')
 				line.erase(it);
+			
+            copy << line << std::endl;
 		}
-	}
 
+	copy.close();
+	copy.open(path, std::ios::in);
+		
+		while(copy >> key >> value){
+			data.insert({key, value});
+		}
+}
 
 private:
 	std::map<std::string, std::string> data;
@@ -133,53 +130,45 @@ private:
 		
 		if(count > 1)
 			throw CustomExecpetion();
-		
+		}
 	}
-	}
-
-	
 };
-
 
 int main() {
 
-	/*TEST (ReturnTrueIfHashtagRemoved)
+	TEST (ReturnTrueIfHashtagRemoved)
 	{
 		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/data/sshd_config");
-		pointer->uncommentTheLine("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/data/sshd_config");
-		EXPECT(pointer->getValue("tego")=="typu");
+		pointer->uncommentTheLine("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/src/sshd_config(copy_2)");
+		EXPECT(pointer->getValue("MaxSessions")=="10");
 	};
-	*/
 
 	TEST (ReturnTrueIfNewConfigFileCreated)
 	{
-		auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
-		pointer->saveFile("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config(copy)");
-		auto pointer2 = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config(copy)");
+		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/data/sshd_config");
+		pointer->saveFile("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/src/sshd_config(copy)");
+		auto pointer2 = std::make_unique <SSHDConfig> ("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/src/sshd_config(copy)");
 		EXPECT(pointer2->getValue("Port")=="22");
 	};
 
 	TEST (ReturnTrueIfNewElementIsInserted)
 	{
-		auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
+		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/src");
 		pointer->addLine("tego", "typu");
 		EXPECT(pointer->getValue("tego")=="typu");
 	};
 
 	TEST (ReturnTrueIfSetPortWorks)
 	{
-		auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
+		auto pointer = std::make_unique <SSHDConfig> ("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/src");
 		pointer->setPort("Port", "25");
 		EXPECT(pointer->getValue("Port")=="25");
 	};
 
 	TEST(ReturIfFileIsOpen) 
 	{
-		//home/acad/na-18-coding-dojo-group-7/data/sshd_config
-		//home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config
-		//home/acad/na-18-coding-dojo-group-7/data/sshd_config
 		try{
-			auto pointer = std::make_unique <SSHDConfig> ("/home/konrad/PHASE_3/DOJO/na-18-coding-dojo-group-7/data/sshd_config");
+			auto pointer = std::make_unique <SSHDConfig> ("/home/acad/Desktop/dojo2/na-18-coding-dojo-group-7/src");
 			EXPECT(pointer != nullptr);
 		}catch(CustomExecpetion e)
 		{
@@ -193,7 +182,4 @@ int main() {
 		auto pointer = std::make_unique <SSHDConfig> ("");
  		EXPECT(pointer != nullptr);
  	};
-
-	
-
 }
